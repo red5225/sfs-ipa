@@ -1,0 +1,8 @@
+*.ipa
+*.zip
+*.mobileprovision
+*.p12
+*.pem
+*.key
+developer-report.md
+__pycache__/

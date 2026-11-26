@@ -1,0 +1,32 @@
+name: Audit SFS IPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      ipa_url:
+        description: Direct HTTPS URL to the IPA release asset
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download and inspect IPA
+        env:
+          IPA_URL: ${{ inputs.ipa_url }}
+        run: python3 scan_ipa.py --url "$IPA_URL" --report developer-report.md
+      - name: Upload developer report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sfs-ipa-developer-report
+          path: developer-report.md
+          if-no-files-found: error
+          retention-days: 30
